@@ -1,0 +1,85 @@
+# Weak-8-task-for-AICP
+This is my weak 8 task for AICP
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int boats_hired = 0;
+    double total_time_raw = 0;
+    double total_time_adjusted = 0;
+    double total_amount = 0;
+    std::vector<double> boat_usage(10, 0);
+
+    while (true) {
+        std::string hire_boat;
+        std::cout << "Do you want to hire a boat? (yes/no): ";
+        std::cin >> hire_boat;
+
+        if (hire_boat == "yes") {
+            int boat_number;
+            while (true) {
+                std::cout << "Which boat do you want to hire (1-10)? ";
+                std::cin >> boat_number;
+                if (1 <= boat_number && boat_number <= 10) {
+                    break;
+                } else {
+                    std::cout << "Invalid boat number. Please enter a number between 1 and 10.\n";
+                }
+            }
+
+            double time;
+            while (true) {
+                std::string time_choice;
+                std::cout << "Do you want to hire the boat for 1 hour or half an hour? (1/half): ";
+                std::cin >> time_choice;
+                if (time_choice == "1") {
+                    time = 1;
+                    break;
+                } else if (time_choice == "half") {
+                    time = 0.5;
+                    break;
+                } else {
+                    std::cout << "Invalid input. Please enter '1' or 'half'.\n";
+                }
+            }
+
+            while (true) {
+                std::cout << "Enter the time you want to hire the boat (between 10 and 17 hours): ";
+                std::cin >> time;
+                if (10 <= time && time <= 17) {
+                    total_time_raw += time;
+                    total_time_adjusted += std::min(time, 2.0);
+                    break;
+                } else {
+                    std::cout << "Invalid time. Please enter a time between 10 and 17 hours.\n";
+                }
+            }
+
+            double cost = (time == 1) ? 20 : 12;
+            total_amount += cost;
+            boats_hired++;
+            boat_usage[boat_number - 1] += time;
+            std::cout << "Boat " << boat_number << " hired for " << time << " hour(s) at $" << cost << " per hour.\n";
+        } else if (hire_boat == "no") {
+            break;
+        } else {
+            std::cout << "Invalid input. Please enter 'yes' or 'no'.\n";
+        }
+    }
+
+    if (boats_hired > 0) {
+        std::cout << "\nSummary:\n";
+        std::cout << "Number of boats hired: " << boats_hired << "\n";
+        std::cout << "Total time hired: " << total_time_adjusted << " hours\n";
+        std::cout << "Total amount: $" << total_amount << "\n";
+
+        auto max_used_boat = std::max_element(boat_usage.begin(), boat_usage.end()) - boat_usage.begin() + 1;
+        std::cout << "Most used boat: Boat " << max_used_boat << "\n";
+    } else {
+        std::cout << "No boats were hired.\n";
+    }
+
+    return 0;
+}
